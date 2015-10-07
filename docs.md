@@ -1300,30 +1300,64 @@ upgrade_info.upgrade_url (Optional) | Upgrade url that can help a user remove th
 
 
 
-##POST: 
+##POST: create_survey
 
 ###Details
+Create a survey based on template or existing survey.
+
+###Notes
+* You cannot specify both template_id and from_survey_id
 
 ###Endpoint
+`https://api.surveymonkey.net/v2/surveys/create_survey?api_key=your_api_key`
 
 ###Request Data
 >Example Request
 
 ```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/surveys/create_survey?api_key=your_api_key --data-binary '{"template_id": "568", "survey_title": "Ice and Fire Event"}'
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
+template_id (Optional) | The template to use for creating the survey | String
+from_survey_id (Optional) | The existing survey to use for creating the survey | String
+survey_title (Required) | Title of the survey | String
+
+
+
 
 ###Response Fields
 >Example Response
 
 ```json
+{
+    "data": {
+        "analysis_url": "http://www.surveymonkey.com/MySurvey_Responses.aspx?sm=N2ZB5dQlKUGggfbp79n4_2Fi3J1R6PIla2Ug1_2FnNBKpco_3D", 
+        "date_created": "2013-08-17 05:33:00", 
+        "date_modified": "2013-08-17 05:33:00", 
+        "language_id": 1, 
+        "num_responses": 0, 
+        "question_count": 14, 
+        "redirect_url": "https://www.surveymonkey.com/apis/surveys/create/interstitial?sm=b1q_2BmKekcuOQyec4_2BtdwSjJ21Ot8yf_2BV6MRISFiV_2F1ydeZAmNJsHbzfFrzSNLF1ZhG87ZfYIXuAi_0AGJnO_2BmTkD7zBblD5_2FbD0q83iEWyRIIIU1SohINF_2F6c8d5aCxe7_2F6_2FpNt4ZQjZqLYftQtnPw061Rp_0A5TYdh_2B7tMLco26IRQXs_3D", 
+        "survey_id": "43625459", 
+        "title": "Ice and Fire Event"
+    }, 
+    "status": 0
+}
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
-
+status (Required) | Status code returned with every response | Integer
+data.survey_id (Required) | Survey Id | String
+data.date_created (Optional) | Date survey was created | Date String
+data.date_modified (Optional) | Date survey was last modified | Date String
+data.title (Optional) | Title of survey | String
+data.language_id (Optional) | Language of survey | Integer
+data.question_count (Optional) | Number of questions in the survey | Integer
+data.num_responses (Optional) | Number of responses for the survey | Integer
+data.analysis_url (Optional) | Url to analysis page | String
 
 
 
