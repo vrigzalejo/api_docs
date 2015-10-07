@@ -139,7 +139,7 @@ A null value. In JSON this is represented as the native null type.
 ###URLs
 A valid URL where the protocol can be either http or https depending on the resource and the user's account settings.
 
-###Question Types THIS IS NOT DONE BECAUSE I DONT UNDERSTAND IT
+###Question Types
 SurveyMonkey has many different question types.  These combinations of family and sybtype can be found in the `get_survey_details` response.
 
 Question Family | Question Subtype | Description
@@ -1362,30 +1362,56 @@ data.analysis_url (Optional) | Url to analysis page | String
 
 
 
-##POST: 
+##POST: create_email_message
 
 ###Details
+Create an email message.
+
+###Notes
+* body_html overrides body_text in the email message sent to recipients
 
 ###Endpoint
+`https://api.surveymonkey.net/v2/emails/create_email_message?api_key=your_api_key`
+
 
 ###Request Data
 >Example Request
 
 ```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/surveys/create_email_message?api_key=hur88stdgyp9gvmmmbreybd7 --data-binary '{"collector_id":"123", "email_message":{ "subject" : "Ice and Fire event" , "reply_email" : "xyzcersei@surveymonkey.com", "body_text" : "We are conducting a survey, and your response would be appreciated. Here is a link to the survey: [SurveyLink] This link is uniquely tied to this survey and your email address. Please do not forward this message. Thanks for your participation! Please note: If you do not wish to receive further emails from us, please click the link below, and you will be automatically removed from our mailing list. [RemoveLink]"}}'
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
+collector_id (Required) | The collector id for which we are creating the email message | String
+email_message.reply_email (Required) | Reply email of the email message to be sent to recipients | String
+email_message.subject (Required) | Subject of the email message to be sent to recipients | String
+email_message.body_text (Optional) | The plain text body of the email message to be sent to recipients. Default template is used if this is not specified | String
 
 ###Response Fields
 >Example Response
 
 ```json
+{
+    "data": {
+        "analysis_url": "http://www.surveymonkey.com/MySurvey_Responses.aspx?sm=N2ZB5dQlKUGggfbp79n4_2Fi3J1R6PIla2Ug1_2FnNBKpco_3D", 
+        "date_created": "2013-08-17 05:33:00", 
+        "date_modified": "2013-08-17 05:33:00", 
+        "language_id": 1, 
+        "num_responses": 0, 
+        "question_count": 14, 
+        "redirect_url": "https://www.surveymonkey.com/apis/surveys/create/interstitial?sm=b1q_2BmKekcuOQyec4_2BtdwSjJ21Ot8yf_2BV6MRISFiV_2F1ydeZAmNJsHbzfFrzSNLF1ZhG87ZfYIXuAi_0AGJnO_2BmTkD7zBblD5_2FbD0q83iEWyRIIIU1SohINF_2F6c8d5aCxe7_2F6_2FpNt4ZQjZqLYftQtnPw061Rp_0A5TYdh_2B7tMLco26IRQXs_3D", 
+        "survey_id": "43625459", 
+        "title": "Ice and Fire Event"
+    }, 
+    "status": 0
+}
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
-
+status (Required) | Status code returned with every response | Integer
+data.email_message_id (Optional) | Email message id | String
 
 
 
