@@ -1416,53 +1416,424 @@ data.email_message_id (Optional) | Email message id | String
 
 
 
-##POST: 
+##POST: get_template_list
 
 ###Details
+Retrieves a paged list of templates provided by Survey Monkey.
+
+###Notes
+* If templates are returned that the user cannot access, the `upgrade_info` dictionary will be returned
 
 ###Endpoint
+`https://api.surveymonkey.net/v2/templates/get_template_list?api_key=your_api_key`
 
 ###Request Data
 >Example Request
 
 ```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/templates/get_template_list?api_key=your_api_key --data-binary '{"page": 1, "page_size": 10, "language_id": 1, "category_id": "131", "fields" : ["title"]}'
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
+page (Optional) | Page number. Defaults to 1 | Integer
+page_size (Optional) | Number of templates to return per page | Integer
+language_id (Optional) | Language Id to filter templates with | Integer-ENUM
+category_id (Optional) | Category Id to filter templates with | String
+show_only_available_to_current_user (Optional) | Filter templates to only show templates available to current user if set to True | Boolean
+fields (Optional) | Additional fields to return. One or more of :[language_id, title, short_description, long_description, is_available_to_current_user, is_featured, is_certified, page_count, question_count,  preview_url, category_id, category_name, category_description, date_modified, date_created] | Array
 
 ###Response Fields
 >Example Response
 
 ```json
+{
+    "data": {
+        "page": 1, 
+        "page_size": 2, 
+        "templates": [
+            {
+                "is_available_to_current_user": true, 
+                "category_description": "Industry Specific", 
+                "category_id": "131", 
+                "category_name": "Industry Specific", 
+                "is_certified": false, 
+                "is_featured": false, 
+                "language_id": 1, 
+                "long_description": "Ask airline passengers about their most and least favorite airlines and find out where they purchase their tickets.", 
+                "page_count": 1, 
+                "preview_url": "http://www.surveymonkey.com/s.aspx?PREVIEW_MODE=DO_NOT_USE_THIS_LINK_FOR_COLLECTION&sm=xGFqaRtYyLLvPusLzk7RlzHaDeBzi8ZPBJreME16Cmo_3D", 
+                "question_count": 10, 
+                "short_description": "Ask airline passengers about their most and least favorite airlines and find out where they purchase their tickets.", 
+                "template_id": "350", 
+                "title": "Airline Passenger Feedback Template"
+            }, 
+            {
+                "is_available_to_current_user": true, 
+                "category_description": "Industry Specific", 
+                "category_id": "131", 
+                "category_name": "Industry Specific", 
+                "is_certified": false, 
+                "is_featured": false, 
+                "language_id": 1, 
+                "long_description": "Ask people about their experiences with digital apps.", 
+                "page_count": 1, 
+                "preview_url": "http://www.surveymonkey.com/s.aspx?PREVIEW_MODE=DO_NOT_USE_THIS_LINK_FOR_COLLECTION&sm=ngTg6Ba5qNR_2BAEDxN4abqBK32Eu5wPf2L9esqoXDGEo_3D", 
+                "question_count": 6, 
+                "short_description": "Ask people about their experiences with digital apps.", 
+                "template_id": "426", 
+                "title": "Apps Template"
+            }
+        ]
+    }, 
+    "status": 0
+}
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
+status (Required) | Status code returned with every response | Integer
+data.page (Required) | Page id | Integer
+data.page_size (Required) | Page size | Integer
+data.templates[_].template_id (Required) | Template Id | String
+data.templates[_].language_id (Optional) | Language id of template | Integer-ENUM
+data.templates[_].title (Optional) | Title of template | String
+data.templates[_].short_description (Optional) | Short description of template | String
+data.templates[_].long_description (Optional) | Long description of template | String
+data.templates[\_].is_available_to_current_user (Optional) | Indicates whether current user is allowed to use this template | Boolean
+data.templates[_].is_featured (Optional) | Indicates whether this is a featured template | Boolean
+data.templates[_].is_certified (Optional) | Indicates whether this template is certified by experts at Survey Monkey | Boolean
+data.templates[_].page_count (Optional) | Number of pages in the template | Integer
+data.templates[_].question_count (Optional) | Number of questions in the template | Integer
+data.templates[_].preview_url (Optional) | Url to preview this template | String
+data.templates[_].category_id (Optional) | Id of template category | String
+data.templates[_].category_name (Optional) | Name of category | String
+data.templates[_].category_description (Optional) | Description of category | String
+data.templates[_].date_created (Optional) | Date template was created | Date String
+data.templates[_].date_modified (Optional) | Date template was modified | Date String
+upgrade_info.restrictions[_].message (Optional) | Message present for any restrictions with the request | String
+upgrade_info.restrictions[_].code (Optional) | Code for the restriction | Integer
+upgrade_info.upgrade_url (Optional) | Upgrade url that can help a user remove the restriction | String
 
 
 
-
-##POST: 
+##POST: create_collector
 
 ###Details
+Create a weblink collector.
+
+###Notes
+* Basic users can create a maximum of 3 collectors per survey
 
 ###Endpoint
+`https://api.surveymonkey.net/v2/collectors/create_collector?api_key=your_api_key`
 
 ###Request Data
 >Example Request
 
 ```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/collectors/create_collector?api_key=your_api_key --data-binary '{"survey_id": "100399456", "collector":{"type": "weblink", "name": "My Collector"}}'
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
+survey_id (Required) | The survey id for which we are creating the collector | String
+collector.type (Required) | Type of collector. Only 'weblink' is supported for now | String-ENUM
+collector.name (Optional) | Name of collector. Defaults to 'New Link' | String
+collector.thank_you_message (Optional) | Message for thank you page, which is enabled if set. | String
+collector.redirect_url (Optional) | Redirect to this url upon survey completion. | String
+
+
+
 
 ###Response Fields
 >Example Response
 
 ```json
+{
+    "data": {
+        "collector": {
+            "collector_id": "1004023433", 
+            "date_created": "2014-03-27 16:46:00", 
+            "date_modified": "2014-03-27 16:46:00", 
+            "name": "My Collector", 
+            "open": true, 
+            "type": "weblink", 
+            "url": "https://www.surveymonkey.com/s/SHLXPHZ"
+        }
+    }, 
+    "status": 0
+}
 ```
 
 Name | Description | Return Type
 ------ | ------- | -------
+status (Required) | Status code returned with every response | Integer
+data.collector.collector_id (Required) | Collector Id | String
+data.collector.date_created (Required) | Date collector was created | Date String
+data.collector.date_modified (Required) | Date collector was last modified | Date String
+data.collector.name (Required) | Name of the collector | String
+data.collector.open (Required) | Whether collector is open to collect responses | Boolean
+data.collector.type (Required) | Collector type | String-ENUM
+data.collector.url (Optional) | If collector is a Web Collector (type 'weblink') then the url for the collector | String
+
+
+
+
+##POST: get_respondent_list
+
+###Details
+Retrieves a paged list of respondents for a given survey and optionally collector
+
+###Notes
+* Surveys with over 500,000 respondents will not be returned
+* DateStrings must be in the format YYYY-MM-DD HH:MM:SS. All DateStrings are implicitly in UTC.
+* All start dates are greater than or equal to the date passed in
+* All end dates are strictly less than date passed in
+* Basic users will only have the first 100 responses returned and will have the upgrade_info dictionary
+
+###Endpoint
+`https://api.surveymonkey.net/v2/surveys/get_respondent_list?api_key=your_api_key`
+
+###Request Data
+>Example Request
+
+```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/surveys/get_respondent_list/?api_key=your_api_key --data-binary '{"survey_id": "100399456", "fields":["collector_id", "url", "open", "type", "name", "date_created", "date_modified"], "start_date":"2013-02-05 00:00:00", "end_date":"2013-04-16 22:47:00", "order_asc":true, "page_size":1, "page":2}'
+```
+
+Name | Description | Return Type
+------ | ------- | -------
+survey_id (Required) | Survey Id | String
+collector_id (Optional) | Collector_id | String
+page (Optional) | Page number. Defaults to 1 | Integer
+page_size (Optional) | Number of surveys to return per page. Defaults to 1000, but basic users can only ever retrieve the first 100 respondents. | Integer
+start_date (Optional) | Respondents must be created after this date | DateString
+end_date (Optional) | Respondents must be created before this date | DateString
+start_modified_date (Optional) | Respondents must be modified after this date | DateString
+end_modified_date (Optional) | Respondents must be modified before this date | DateString
+order_asc (Optional) | If 'true' sorts ASC, if 'false' sorts DESC. Defaults to 'false' (DESC). | Boolean
+order_by (Optional) | Column to sort results by. Defaults to `respondent_id` | one of the following: [respondent_id, date_modified, date_start]
+fields (Optional) | Additional fields to return.  One or more of :[date_start, date_modified, collector_id, collection_mode, custom_id, email, first_name, last_name, ip_address, status, analysis_url, recipient_id] | Array
+
+
+###Response Fields
+>Example Response
+
+```json
+{
+    "data": {
+        "page": 1,
+        "page_size": 5,
+        "respondents": [
+            {
+                "analysis_url": "https://www.surveymonkey.com/MySurvey_ResponsesDetail.aspx?sm=2k1FgYX4h3_2FspnRy_2BGzlCGRHeOdtLQ7yVncz8OZOXwJDxZCidfQEM7vhAWcYFyi725M6BQtRxzLm_0ANkz8bBPIOw_3D_3D",
+                "custom_id": "",
+                "date_modified": "2013-04-17 21:44:46",
+                "date_start": "2013-04-17 21:44:37",
+                "first_name": "",
+                "respondent_id": "2500098680"
+            }
+        ]
+    },
+    "status": 0
+}
+```
+
+Name | Description | Return Type
+------ | ------- | -------
+status (Required) | Status code returned with every response | Integer
+data.page (Required) | Page id | Integer
+data.page_size (Required) | Page size | Integer
+data.respondents[_].respondent_id (Required) | Respondent Id | String
+data.respondents[_].date_start (Optional) | Date the respondent started answering survey | Date String
+data.respondents[_].date_modified (Optional) | Date respondent last modified their responses | Date String
+data.respondents[_].collector_id (Optional) | Collector Id | String
+data.respondents[_].collection_mode (Optional) | Way the respondent answered | String-ENUM
+data.respondents[_].custom_id (Optional) | Custom id set by client | String
+data.respondents[_].email (Optional) | Email address for respondent | String
+data.respondents[_].first_name (Optional) | First name of respondent | String
+data.respondents[_].last_name (Optional) | Last name of the respondent | String
+data.respondents[_].ip_address (Optional) | IP address of respondent | String
+data.respondents[_].status (Optional) | Status of respondent in survey | String-ENUM
+data.respondents[_].analysis_url (Optional) | Url to analysis page | String
+data.respondents[_].recipient_id (Optional) | ID generated for recipients of survey invitations via email collectors | String
+upgrade_info.restrictions[_].message (Optional) | Message present for any restrictions with the request | String
+upgrade_info.restrictions[_].code (Optional) | Code for the restriction | Integer
+upgrade_info.upgrade_url (Optional) | Upgrade url that can help a user remove the restriction | String
+
+
+
+
+##POST: get_responses
+
+###Details
+Takes a list of respondent ids and returns the responses that correlate to them.  To be used with 'get_survey_details'
+
+###Notes
+* Surveys with over 500,000 reponses are not available via the API currently
+* Text responses returned are truncated after 32,768 characters
+* Max number of respondents per call is 100
+
+###Endpoint
+`https://api.surveymonkey.net/v2/surveys/get_responses?api_key=your_api_key`
+
+
+###Request Data
+>Example Request
+
+```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/surveys/get_responses/?api_key=your_api_key --data-binary '{"survey_id":"103994756", "respondent_ids": ["2503019027", "2500039028", "2500039029", "2503019064"]}'
+```
+
+Name | Description | Return Type
+------ | ------- | -------
+respondent_ids (Required) | Respondents to retrieve | Array
+survey_id (Required) | Survey Id | String
+
+###Response Fields
+>Example Response
+
+```json
+{
+    "data": [
+        {
+            "questions": [
+                {
+                    "answers": [
+                        {
+                            "col": "3024965133",
+                            "row": "3024965139"
+                        },
+                        {
+                            "col": "3024965134",
+                            "row": "3024965140"
+                        },
+                        {
+                            "col": "3024965135",
+                            "row": "3024965141"
+                        },
+                        {
+                            "row": "0",
+                            "text": "Other!"
+                        }
+                    ],
+                    "question_id": "316084770"
+                },
+                {
+                    "answers": [
+                        {
+                            "col": "3024965125",
+                            "row": "3024965122"
+                        },
+                        {
+                            "col": "3024965124",
+                            "row": "3024965123"
+                        }
+                    ],
+                    "question_id": "316084761"
+                },
+                {
+                    "answers": [
+                        {
+                            "row": "3024959616"
+                        }
+                    ],
+                    "question_id": "316083321"
+                },
+                {
+                    "answers": [
+                        {
+                            "row": "0",
+                            "text": "This is an open answer"
+                        }
+                    ],
+                    "question_id": "316083320"
+                },
+                {
+                    "answers": [
+                        {
+                            "col": "3024962639",
+                            "row": "3024962638"
+                        },
+                        {
+                            "col": "3024962640",
+                            "row": "3024962637"
+                        },
+                        {
+                            "col": "3024962639",
+                            "row": "3024962636"
+                        }
+                    ],
+                    "question_id": "316084090"
+                },
+                {
+                    "answers": [
+                        {
+                            "row": "3024964761",
+                            "text": "9"
+                        },
+                        {
+                            "row": "3024964762",
+                            "text": "1"
+                        }
+                    ],
+                    "question_id": "316084724"
+                }
+            ],
+            "respondent_id": "2500019027"
+        }
+    ],
+    "status": 0
+}
+```
+
+Name | Description | Return Type
+------ | ------- | -------
+status (Required) | Status code returned with every response | Integer
+data[_].respondent_id (Required) | Respondent id | String
+data[\_].questions[\_].question_id (Required) | Id of the question | String
+data[\_].questions[\_].answers[\_].row (Optional) | Id of a row type answer | String
+data[\_].questions[\_].answers[\_].col (Optional) | Id of a col type answer | String
+data[\_].questions[\_].answers[\_].col_choice (Optional) | Id of a col_choice answer | String
+data[\_].questions[\_].answers[\_].text (Optional) | Id of a text type answer | String
+
+
+
+##POST: get_response_counts
+
+###Details
+Returns how many respondents have started and/or completed the survey for the given collector.
+
+###Endpoint
+`https://api.surveymonkey.net/v2/surveys/get_response_counts?api_key=your_api_key`
+
+###Request Data
+>Example Request
+
+```shell
+curl -H 'Authorization:bearer XXXYYYZZZ' -H 'Content-Type: application/json' https://api.surveymonkey.net/v2/surveys/get_response_counts/?api_key=your_api_key --data-binary '{"collector_id": "23907195"}'
+```
+
+Name | Description | Return Type
+------ | ------- | -------
+collector_id (Required) | Id of the collector gathering responses | String
+
+###Response Fields
+>Example Response
+
+```json
+{
+    "data": {
+        "completed": 10,
+        "started": 1
+    },
+    "status": 0
+}
+```
+
+Name | Description | Return Type
+------ | ------- | -------
+status (Required) | Status code returned with every response | Integer
+data.completed (Required) | Number of respondents that have completed the survey linked to by the collector | Integer
+data.started (Required) | Number of respondents have started but not completed the survey linked to the collector | Integer
